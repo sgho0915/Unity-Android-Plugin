@@ -1,6 +1,7 @@
 package com.systronics.plugin;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -11,6 +12,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import androidx.core.content.FileProvider;
+
 import com.unity3d.player.UnityPlayer;
 
 import java.io.File;
@@ -20,6 +23,7 @@ import java.io.OutputStream;
 
 public class FileChooserActivity extends Activity {
     private static final int REQUEST_CODE_FILE_CHOOSER = 1;
+    static String strFilePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,15 +45,18 @@ public class FileChooserActivity extends Activity {
 
             // 내부 저장소에 폴더 생성 및 이미지 저장
             String filePath = saveImageToInternalStorage(selectedFileUri);
+            strFilePath = filePath;
 
             // Unity로 파일 경로를 전달
-            UnityPlayer.UnitySendMessage("Image_Load", "ReceiveFilePath", filePath);
+            UnityPlayer.UnitySendMessage("SYSTEM_MANAGER", "ReceiveFilePath", strFilePath);
         }
 
         // 액티비티 종료
         finish();
     }
 
+
+    // 내부 저장소에 이미지 저장하고 파일 경로 반환
     // 내부 저장소에 이미지 저장하고 파일 경로 반환
     private String saveImageToInternalStorage(Uri imageUri) {
         try {
@@ -57,8 +64,8 @@ public class FileChooserActivity extends Activity {
             InputStream inputStream = getContentResolver().openInputStream(imageUri);
             Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
 
-            // 내부 저장소에 저장할 폴더 경로 생성
-            File directory = new File(getExternalFilesDir(null), "images");
+            // 최상위 외부 저장소 경로에 SYStronics/FPImages 폴더 경로 생성
+            File directory = new File(Environment.getExternalStorageDirectory() + File.separator + "SYStronics" + File.separator + "FPImages");
             if (!directory.exists()) {
                 directory.mkdirs();
             }
@@ -77,7 +84,7 @@ public class FileChooserActivity extends Activity {
             }
             cursor.close();
 
-            // 내부 저장소에 이미지 저장
+            // 최상위 경로의 SYStronics/FPImages 폴더에 이미지 저장
             File file = new File(directory, fileName);
             OutputStream outputStream = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
@@ -88,10 +95,11 @@ public class FileChooserActivity extends Activity {
             inputStream.close();
 
             // 파일 경로 반환
-            return file.getAbsolutePath();
+            return file.getPath();
         } catch (Exception e) {
-            Log.e("FileChooserActivity", "Error saving image to internal storage: " + e.getMessage());
+            Log.e("FileChooserActivity", "Error saving image to external storage: " + e.getMessage());
             return null;
         }
     }
+
 }
