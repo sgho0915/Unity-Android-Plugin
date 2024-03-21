@@ -34,25 +34,4 @@ public class UnityPlugin extends Activity {
         return errMessage;
     }
 
-
-    // 와이파이 상태 체크
-    public static String getWiFiStatus(Context context) {
-        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        if(wifiManager != null){
-            if (wifiManager.isWifiEnabled()) {
-                WifiInfo info = wifiManager.getConnectionInfo();
-                if (info != null && info.getNetworkId() != -1) {
-                    int rssi = info.getRssi();
-                    int level = WifiManager.calculateSignalLevel(rssi, 5);
-                    String name = info.getSSID();
-                    String macAddr = info.getMacAddress();
-                    return "Connected" + name + level;
-                }
-            }
-            else{
-                return "wifi Disabled";
-            }
-        }
-        return "wifiManager is null";
-    }
 }
