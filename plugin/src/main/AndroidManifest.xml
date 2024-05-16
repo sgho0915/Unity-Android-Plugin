@@ -20,7 +20,7 @@
 
     <application android:usesCleartextTraffic="true">
 
-
+        <activity android:name="com.systronics.plugin.RTSPPlayer" />
 
         <!--업데이트를 위한 FileProvider-->
         <provider
