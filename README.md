@@ -22,3 +22,4 @@ Android native module for Unity projetcs
 - 사용가능 저장소 용량 string형 리
 
 ## 앱 OTA 업데이트 시 앱 내 설치(UnityPlugin)
+- apk 파일 설치
