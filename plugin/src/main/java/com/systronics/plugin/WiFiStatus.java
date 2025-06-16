@@ -27,9 +27,9 @@ public class WiFiStatus {
 
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
         ssid = wifiInfo.getSSID();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            ssid = "<unknown ssid>";
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//            ssid = "<unknown ssid>";
+//        }
         return ssid;
     }
 
